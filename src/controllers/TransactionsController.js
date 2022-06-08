@@ -5,6 +5,8 @@ import parsePhoneNumber from "libphonenumber-js";
 
 import {cpf, cnpj} from "cpf-cnpj-validator";
 
+import Cart from "../models/Cart";
+
 class TransactionsController {
 
 	async create(req, res) {
@@ -80,15 +82,18 @@ class TransactionsController {
 				creditCardCvv: Yup.string()
 				.when("paymentType", (paymentType, schema) => paymentType === "credit_card" ? schema.required() : schema),
 
-
-				
-
 			});
 
 			if(!(await schema.isValid(req.body))){
 
 				return res.status(400).json({error: "error on validate schema"});
 
+			}
+
+			const cart = Cart.findOne({ code: cartCode});
+
+			if (!cart) {
+				return res.status(404).json({error: "cart not founded"});
 			}
 
 			return res.status(200).json({message: "ok!"});
