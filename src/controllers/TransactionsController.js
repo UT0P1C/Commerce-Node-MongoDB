@@ -6,6 +6,7 @@ import parsePhoneNumber from "libphonenumber-js";
 import {cpf, cnpj} from "cpf-cnpj-validator";
 
 class TransactionsController {
+
 	async create(req, res) {
 		try {
 
@@ -34,11 +35,16 @@ class TransactionsController {
 			//utilizando o yup para validar o schema
 
 			const schema = Yup.object({
+
 				cartCode: Yup.string().required(),
+
 				paymentType: Yup.mixed().oneOf(["credit_card", "billet"]).required(),
+
 				installments: Yup.number().min(1)
 				.when("paymentType", (paymentType, schema) => paymentType === "credit_card" ? schema.max(12) : schema.max(1)),
+
 				customerName: Yup.string().required().min(3),
+
 				customerEmail: Yup.string().required().email(),
 
 				//validando o numero de celular com a biblioteca libphonenumber-js
@@ -55,6 +61,24 @@ class TransactionsController {
 				"${path} is not a valid Document!", 
 				(value) => cpf.isValid(value) || cnpj.isValid(value)
 				),
+
+				billingAddress: Yup.string().required(),
+				billingNumber: Yup.string().required(),
+				billingNeighborhood: Yup.string().required(),
+				billingCity: Yup.string().required(),
+				billingState: Yup.string().required(),
+				billingZipCode: Yup.string().required(),
+
+				//validação para verificar se o cartão é necessario
+
+				creditCardNumber: Yup.string()
+				.when("paymentType", (paymentType, schema) => paymentType === "credit_card" ? schema.required() : schema),
+				creditCardExpiration: Yup.string()
+				.when("paymentType", (paymentType, schema) => paymentType === "credit_card" ? schema.required() : schema),
+				creditCardHolderName: Yup.string()
+				.when("paymentType", (paymentType, schema) => paymentType === "credit_card" ? schema.required() : schema),
+				creditCardCvv: Yup.string()
+				.when("paymentType", (paymentType, schema) => paymentType === "credit_card" ? schema.required() : schema),
 
 
 				

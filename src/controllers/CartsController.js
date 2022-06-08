@@ -2,7 +2,7 @@ import Cart from "../models/Cart";
 
 class CartsController {
 	async index (req, res) {
-
+		//get cart
 		try {
 			const carts = await Cart.find();
 			return res.status(200).json(carts);
@@ -13,7 +13,7 @@ class CartsController {
 		}
 	}
 
-	//create card
+	//create cart post
 
 	async create(req, res) {
 		try {
@@ -30,7 +30,7 @@ class CartsController {
 	}
 
 
-	//update card
+	//update cart put
 
 	async update(req, res) {
 		try {
@@ -57,7 +57,7 @@ class CartsController {
 		}
 	}
 
-	//Delete cart
+	//Delete cart 
 
 	async delete(req, res) {
 		try {
