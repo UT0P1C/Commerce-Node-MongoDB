@@ -7,6 +7,8 @@ import {cpf, cnpj} from "cpf-cnpj-validator";
 
 import Cart from "../models/Cart";
 
+import TransactionService from "../services/TransactionService";
+
 class TransactionsController {
 
 	async create(req, res) {
@@ -96,7 +98,40 @@ class TransactionsController {
 				return res.status(404).json({error: "cart not founded"});
 			}
 
-			return res.status(200).json({message: "ok!"});
+			//fazendo o registro da transação
+
+			const service = new TransactionService();
+
+			const resp = await service.process({
+				cartCode,
+				paymentType,
+				installments,
+				customer: {
+					name: customerName,
+					email: customerEmail,
+					mobile: customerMobile,
+					document: customerDocument
+				},
+				billing: {
+					address: billingAddress,
+					number: billingNumber,
+					neighborhood: billingNeighborhood,
+					city: billingCity,
+					state: billingState,
+					zipcode: billingZipCode,
+
+				},
+				creditCard: {
+					number: creditCardNumber,
+					expiration: creditCardExpiration,
+					holdername: creditCardHolderName,
+					cvv: creditCardCvv
+				}
+			});
+
+			return res.status(200).json(resp);
+
+
 		} catch (err) {
 			console.log(err);
 			return res.status(418).json({error: "I'm a teapot"});
