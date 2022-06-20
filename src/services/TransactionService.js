@@ -5,6 +5,7 @@ import Transaction from "../models/Transaction";
 import PagarMeProvider from "../providers/PagarMeProvider";
 
 import {v4 as uuidv4} from "uuid";
+import { response } from "express";
 
 class TransactionService {
 	paymentProvider;
@@ -56,6 +57,12 @@ class TransactionService {
 			creditCard,
 			billing,
 		});
+
+		transaction.updateOne({
+			transactionId: response.transactionId,
+			status: response.status,
+			processorResponse: response.processorResponse
+		})
 
 		return transaction;
 	}
