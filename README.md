@@ -23,6 +23,7 @@ para utilizar e testar basta adicionar os parametros necessários em um arquivo 
 # Exemplo de requisição
 
 {
+
     "cartCode": "666",
     "paymentType": "credit_card",
     "installments": 1,
